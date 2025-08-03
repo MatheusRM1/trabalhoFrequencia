@@ -3,6 +3,7 @@ import { View, StyleSheet, Alert, Text, Button } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import React from 'react';
 
 export default function Scanner() {
   const [scanned, setScanned] = useState(false);
