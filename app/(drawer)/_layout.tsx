@@ -1,22 +1,11 @@
-import { HeaderTitle } from '@react-navigation/elements';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
-import { Platform } from 'react-native';
 
-
-export default function TabLayout() {
-
-
+export default function DrawerLayout() {
   return (
     <Drawer
       screenOptions={{
         headerShown: true,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
       }}>
       <Drawer.Screen
         name="index"

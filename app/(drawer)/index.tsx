@@ -1,20 +1,23 @@
-import { Link } from "expo-router";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState, useEffect } from "react";
+import { useAlunoData } from "@/hooks/useAlunoData";
+import { useState } from "react";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function Home() {
   const [matricula, setMatricula] = useState("");
+  const { alunoData, salvarMatricula } = useAlunoData();
 
-  useEffect(() => {
-    AsyncStorage.getItem("matricula").then((savedMatricula) => {
-      if (savedMatricula) setMatricula(savedMatricula);
-    });
-  }, []);
+  const handleSalvarMatricula = async () => {
+    if (!matricula.trim()) {
+      Alert.alert("Erro", "Digite uma matrícula válida");
+      return;
+    }
 
-  const handleSaveMatricula = () => {
-    AsyncStorage.setItem("matricula", matricula);
-    alert("Matrícula salva com sucesso!");
+    try {
+      await salvarMatricula(matricula);
+      Alert.alert("Sucesso", "Matrícula salva com sucesso!");
+    } catch {
+      Alert.alert("Erro", "Falha ao salvar matrícula");
+    }
   };
 
   return (
@@ -22,12 +25,12 @@ export default function Home() {
       <Text style={styles.title}>Controle de Frequência</Text>
 
       <TextInput
-        placeholder="Digite sua matrícula"
+        placeholder={alunoData?.matricula || "Digite sua matrícula"}
         value={matricula}
         onChangeText={setMatricula}
         style={styles.input}
       />
-      <Button title="Salvar Matrícula" onPress={handleSaveMatricula} />
+      <Button title="Salvar Matrícula" onPress={handleSalvarMatricula} />
     </View>
   );
 }
