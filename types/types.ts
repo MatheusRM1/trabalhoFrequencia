@@ -6,8 +6,14 @@ export type Presenca = {
 export type AlunoLocalData = {
   matricula: string;
   presencas: Presenca[];
-  faltas: Array<{
+  faltas: {
     disciplina: string;
     quantidade: number;
-  }>;
+  }[];
+};
+
+export type AlunoPresente = {
+  matricula: string;
+  nome: string;
+  horario: string;
 };

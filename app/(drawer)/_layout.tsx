@@ -14,15 +14,21 @@ export default function DrawerLayout() {
         }}
       />
       <Drawer.Screen
-        name="faltas"
+        name="scanner"
         options={{
-          title: 'Faltas',
+          title: 'Scanner QR',
         }}
       />
       <Drawer.Screen
-        name="scanner"
+        name="faltas"
         options={{
-          title: 'Scanner',
+          title: 'Minhas Faltas',
+        }}
+      />
+      <Drawer.Screen
+        name="alunos-presentes"
+        options={{
+          title: 'Alunos Presentes',
         }}
       />
     </Drawer>
