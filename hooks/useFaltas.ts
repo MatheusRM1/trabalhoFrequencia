@@ -1,41 +1,80 @@
-import { AlunoLocalData } from '@/types/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 
-export function useFaltas(matricula?: string) {
-  const [faltasAPI, setFaltasAPI] = useState<AlunoLocalData['faltas']>([]);
+export function useFaltas() {
+  const [faltasPorDisciplina, setFaltasPorDisciplina] = useState<{disciplina: string, faltas: number, presencas: number, totalAulas: number}[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchFaltas = async (matriculaParam: string) => {
+  const calcularFaltas = async () => {
     try {
       setLoading(true);
-      setError(null);
-      const response = await fetch(`https://sua-api.com/faltas/${matriculaParam}`);
       
-      if (!response.ok) {
-        throw new Error('Falha ao buscar faltas');
+      const alunoData = await AsyncStorage.getItem('alunoData');
+      if (!alunoData) {
+        setFaltasPorDisciplina([]);
+        return;
       }
-      
-      const data = await response.json();
-      setFaltasAPI(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido');
-      console.error('Erro ao buscar faltas:', err);
+
+      const { matricula } = JSON.parse(alunoData);
+
+      const disciplinasConfig = [
+        { disciplina: 'Matemática', aulasSemanais: 4, semanas: 8 },
+        { disciplina: 'Português', aulasSemanais: 3, semanas: 8 },
+        { disciplina: 'História', aulasSemanais: 2, semanas: 8 },
+        { disciplina: 'Desenvolvimento Mobile', aulasSemanais: 3, semanas: 8 },
+        { disciplina: 'Física', aulasSemanais: 3, semanas: 8 },
+        { disciplina: 'Química', aulasSemanais: 2, semanas: 8 }
+      ];
+
+      const resultados = [];
+
+      for (const config of disciplinasConfig) {
+        const totalAulasEsperadas = config.aulasSemanais * config.semanas;
+        let presencasRegistradas = 0;
+
+        const hoje = new Date();
+        for (let i = 0; i < 60; i++) {
+          const data = new Date(hoje);
+          data.setDate(data.getDate() - i);
+          const dataStr = data.toISOString().split('T')[0];
+          
+          const presencasData = await AsyncStorage.getItem(`presencas_${dataStr}`);
+          if (presencasData) {
+            const presencas = JSON.parse(presencasData);
+            const presencasAluno = presencas.filter((p: any) => 
+              p.matricula === matricula && p.disciplina === config.disciplina
+            );
+            presencasRegistradas += presencasAluno.length;
+          }
+        }
+
+        const faltas = Math.max(0, totalAulasEsperadas - presencasRegistradas);
+        
+        resultados.push({
+          disciplina: config.disciplina,
+          faltas,
+          presencas: presencasRegistradas,
+          totalAulas: totalAulasEsperadas
+        });
+      }
+
+      setFaltasPorDisciplina(resultados);
+
+    } catch (error) {
+      console.error('Erro ao calcular faltas:', error);
+      setFaltasPorDisciplina([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (matricula) {
-      fetchFaltas(matricula);
-    }
-  }, [matricula]);
+    calcularFaltas();
+  }, []);
 
   return {
-    faltasAPI,
+    faltasPorDisciplina,
     loading,
-    error,
-    refetch: () => matricula && fetchFaltas(matricula)
+    recalcularFaltas: calcularFaltas
   };
 }

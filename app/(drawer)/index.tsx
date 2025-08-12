@@ -4,6 +4,7 @@ import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function Home() {
   const [matricula, setMatricula] = useState("");
+  const [nome, setNome] = useState("");
   const { alunoData, salvarMatricula } = useAlunoData();
 
   const handleSalvarMatricula = async () => {
@@ -12,25 +13,50 @@ export default function Home() {
       return;
     }
 
+    if (!nome.trim()) {
+      Alert.alert("Erro", "Digite seu nome");
+      return;
+    }
+
     try {
-      await salvarMatricula(matricula);
-      Alert.alert("Sucesso", "Matrícula salva com sucesso!");
+      await salvarMatricula(matricula, nome);
+      Alert.alert("Sucesso", "Dados salvos com sucesso!");
+      setMatricula("");
+      setNome("");
     } catch {
-      Alert.alert("Erro", "Falha ao salvar matrícula");
+      Alert.alert("Erro", "Falha ao salvar dados");
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Controle de Frequência</Text>
+      
+      {alunoData && (
+        <View style={styles.dadosAtuais}>
+          <Text style={styles.labelDados}>Dados Cadastrados:</Text>
+          <Text style={styles.textoDados}>Matrícula: {alunoData.matricula}</Text>
+          <Text style={styles.textoDados}>Nome: {alunoData.nome}</Text>
+        </View>
+      )}
 
+      <Text style={styles.label}>Matrícula:</Text>
       <TextInput
-        placeholder={alunoData?.matricula || "Digite sua matrícula"}
+        placeholder="Digite sua matrícula"
         value={matricula}
         onChangeText={setMatricula}
         style={styles.input}
       />
-      <Button title="Salvar Matrícula" onPress={handleSalvarMatricula} />
+      
+      <Text style={styles.label}>Nome:</Text>
+      <TextInput
+        placeholder="Digite seu nome completo"
+        value={nome}
+        onChangeText={setNome}
+        style={styles.input}
+      />
+      
+      <Button title="Salvar Dados" onPress={handleSalvarMatricula} />
     </View>
   );
 }
@@ -40,9 +66,38 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
     textAlign: "center",
   },
-  input: { borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5 },
-  menu: { gap: 10, marginTop: 20 },
+  dadosAtuais: {
+    backgroundColor: '#e8f5e8',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  labelDados: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2d5a2d',
+    marginBottom: 5,
+  },
+  textoDados: {
+    fontSize: 14,
+    color: '#2d5a2d',
+    marginBottom: 3,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#333',
+  },
+  input: { 
+    borderWidth: 1, 
+    padding: 12, 
+    marginBottom: 15, 
+    borderRadius: 5,
+    borderColor: '#ddd',
+    fontSize: 16,
+  },
 });

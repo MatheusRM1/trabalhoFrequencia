@@ -20,14 +20,18 @@ export function useAlunoData() {
     }
   };
 
-  const salvarMatricula = async (matricula: string) => {
+  const salvarMatricula = async (matricula: string, nome?: string) => {
     try {
       const novoAlunoData: AlunoLocalData = {
         matricula,
-        presencas: [],
+        nome: nome || `Aluno ${matricula}`,
         faltas: [
-          { disciplina: "Matemática", quantidade: 1 },
-          { disciplina: "Programação", quantidade: 0 }
+          { disciplina: "Matemática", quantidade: 0 },
+          { disciplina: "Português", quantidade: 0 },
+          { disciplina: "História", quantidade: 0 },
+          { disciplina: "Desenvolvimento Mobile", quantidade: 0 },
+          { disciplina: "Física", quantidade: 0 },
+          { disciplina: "Química", quantidade: 0 }
         ]
       };
       

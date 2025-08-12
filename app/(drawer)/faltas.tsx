@@ -1,26 +1,61 @@
-import { useAlunoData } from "@/hooks/useAlunoData";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import EmptyState from "@/components/EmptyState";
+import FaltaCard from "@/components/FaltaCard";
+import Loading from "@/components/Loading";
+import { useFaltas } from "@/hooks/useFaltas";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
 export default function Faltas() {
-  const { alunoData } = useAlunoData();
+  const { faltasPorDisciplina, loading, recalcularFaltas } = useFaltas();
 
-  const faltas = alunoData?.faltas || [];
+  if (loading) {
+    return <Loading message="Calculando faltas..." />;
+  }
 
   return (
-    <FlatList
-      data={faltas}
-      renderItem={({ item }) => (
-        <View style={styles.item}>
-          <Text>{item.disciplina}</Text>
-          <Text>Faltas: {item.quantidade}</Text>
-        </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Controle de Faltas</Text>
+      <Text style={styles.subtitle}>
+        Resumo da sua frequência por disciplina
+      </Text>
+      
+      {faltasPorDisciplina.length === 0 ? (
+        <EmptyState
+          icon="📊"
+          title="Nenhum dado de frequência encontrado"
+          subtitle="Comece a registrar presenças para ver suas estatísticas"
+        />
+      ) : (
+        <FlatList
+          data={faltasPorDisciplina}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={recalcularFaltas} />
+          }
+          renderItem={({ item }) => <FaltaCard item={item} />}
+          keyExtractor={(item) => item.disciplina}
+          showsVerticalScrollIndicator={false}
+        />
       )}
-    />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 20, fontWeight: "bold", marginBottom: 10 },
-  item: { padding: 10, borderBottomWidth: 1, borderColor: "#ccc" },
+  container: { 
+    flex: 1, 
+    padding: 20, 
+    backgroundColor: '#f5f5f5' 
+  },
+  title: { 
+    fontSize: 24, 
+    fontWeight: "bold", 
+    marginBottom: 8,
+    textAlign: 'center',
+    color: '#333'
+  },
+  subtitle: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#666'
+  },
 });

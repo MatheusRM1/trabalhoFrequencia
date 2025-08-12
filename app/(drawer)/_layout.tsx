@@ -16,7 +16,7 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="scanner"
         options={{
-          title: 'Scanner QR',
+          title: 'Registrar Presença',
         }}
       />
       <Drawer.Screen

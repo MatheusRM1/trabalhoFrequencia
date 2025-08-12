@@ -1,16 +1,14 @@
+import EmptyState from "@/components/EmptyState";
+import Loading from "@/components/Loading";
+import PresencaCard from "@/components/PresencaCard";
 import { useAlunosPresentes } from "@/hooks/useAlunosPresentes";
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
 export default function AlunosPresentes() {
   const { alunosPresentes, loading, error, refetch } = useAlunosPresentes();
 
   if (loading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#0066cc" />
-        <Text style={styles.loadingText}>Carregando alunos presentes...</Text>
-      </View>
-    );
+    return <Loading message="Carregando presenças..." />;
   }
 
   if (error) {
@@ -23,26 +21,28 @@ export default function AlunosPresentes() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Alunos Presentes Hoje</Text>
+      <Text style={styles.title}>Presenças Registradas Hoje</Text>
       <Text style={styles.subtitle}>
-        {alunosPresentes.length} aluno(s) registraram presença
+        {alunosPresentes.length} presença(s) registrada(s)
       </Text>
       
-      <FlatList
-        data={alunosPresentes}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={refetch} />
-        }
-        renderItem={({ item }) => (
-          <View style={styles.item}>
-            <Text style={styles.matricula}>Matrícula: {item.matricula}</Text>
-            <Text style={styles.nome}>{item.nome}</Text>
-            <Text style={styles.horario}>Registrado às: {item.horario}</Text>
-          </View>
-        )}
-        keyExtractor={(item) => item.matricula}
-        showsVerticalScrollIndicator={false}
-      />
+      {alunosPresentes.length === 0 ? (
+        <EmptyState
+          icon="✅"
+          title="Nenhuma presença registrada ainda hoje"
+          subtitle="Use o scanner de QR Code para registrar presenças"
+        />
+      ) : (
+        <FlatList
+          data={alunosPresentes}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={refetch} />
+          }
+          renderItem={({ item }) => <PresencaCard item={item} />}
+          keyExtractor={(item, index) => `${item.matricula}-${item.disciplina}-${index}`}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 }
@@ -71,36 +71,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     color: '#666'
-  },
-  item: { 
-    padding: 15, 
-    backgroundColor: 'white',
-    marginBottom: 10,
-    borderRadius: 8,
-    elevation: 2,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  matricula: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#0066cc',
-    marginBottom: 4,
-  },
-  nome: {
-    fontSize: 18,
-    color: '#333',
-    marginBottom: 4,
-  },
-  horario: {
-    fontSize: 14,
-    color: '#666',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#666',
   },
   errorText: {
     fontSize: 16,
