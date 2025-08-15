@@ -1,50 +1,121 @@
-# Welcome to your Expo app 👋
+# 📱 TrabalhoFrequencia - Sistema de Controle de Frequência
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> **Trabalho Final da Disciplina de Desenvolvimento para Dispositivos Móveis**  
+> Universidade Federal de Juiz de Fora (UFJF)
 
-## Get started
+## 📋 Sobre o Projeto
 
-1. Install dependencies
+O **TrabalhoFrequencia** é um aplicativo móvel desenvolvido em React Native/Expo que permite aos estudantes registrar sua presença em aulas através da leitura de QR Codes. O sistema funciona completamente offline, armazenando dados localmente no dispositivo.
 
+### 🎯 Funcionalidades Principais
+
+- **📝 Cadastro de Aluno**: Registro de matrícula e nome do estudante
+- **📸 Scanner QR Code**: Leitura de códigos QR para registrar presença nas aulas
+- **📚 Seleção de Disciplinas**: Escolha da matéria antes de registrar a presença
+- **📊 Controle de Faltas**: Visualização de estatísticas de frequência por disciplina
+- **👥 Presenças do Dia**: Lista de todas as presenças registradas na data atual
+- **💾 Funcionamento Offline**: Todos os dados são armazenados localmente com AsyncStorage
+
+### 🏗️ Disciplinas Disponíveis
+
+- Matemática (4 aulas/semana)
+- Português (3 aulas/semana)
+- História (2 aulas/semana)
+- Desenvolvimento Mobile (3 aulas/semana)
+- Física (3 aulas/semana)
+- Química (2 aulas/semana)
+
+## 🚀 Tecnologias Utilizadas
+
+- **React Native** com **Expo SDK 53**
+- **TypeScript** para tipagem estática
+- **Expo Router** para navegação
+- **Expo Camera** para scanner de QR Code
+- **AsyncStorage** para persistência de dados
+- **React Navigation** com Drawer Navigator
+
+## 📱 Estrutura do App
+
+```
+app/
+├── (drawer)/           # Navegação principal
+│   ├── index.tsx      # Tela inicial (cadastro)
+│   ├── scanner.tsx    # Scanner QR Code
+│   ├── alunos-presentes.tsx  # Lista de presenças do dia
+│   └── faltas.tsx     # Controle de faltas
+├── _layout.tsx        # Layout principal
+└── hooks/             # Custom hooks
+    ├── useAlunoData.ts
+    ├── useAlunosPresentes.ts
+    ├── useFaltas.ts
+    ├── useQRScanner.ts
+    └── useDisciplinas.ts
+```
+
+## 🛠️ Instalação e Execução
+
+### Pré-requisitos
+
+- Node.js (versão 18 ou superior)
+- npm ou yarn
+- Expo CLI
+- Dispositivo móvel com Expo Go ou emulador Android/iOS
+
+### Passos para executar
+
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/MatheusRM1/trabalhoFrequencia.git
+   cd trabalhoFrequencia
+   ```
+
+2. **Instale as dependências**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. **Inicie o servidor de desenvolvimento**
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+4. **Execute no dispositivo**
+   - **Celular**: Escaneie o QR Code com o app Expo Go
+   - **Emulador Android**: Pressione `a` no terminal
+   - **Simulador iOS**: Pressione `i` no terminal
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📖 Como Usar
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### 1. 📝 Primeiro Acesso
+- Abra o app e cadastre sua matrícula e nome completo
+- Os dados ficam salvos localmente no dispositivo
 
-## Get a fresh project
+### 2. 📸 Registrar Presença
+- Vá para a tela "Registrar Presença"
+- Selecione a disciplina da aula
+- Aponte a câmera para o QR Code fornecido pelo professor
+- Confirme o registro da presença
 
-When you're ready, run:
+### 3. 📊 Acompanhar Frequência
+- **Presenças do Dia**: Veja todas as presenças registradas hoje
+- **Controle de Faltas**: Monitore sua frequência por disciplina
 
-```bash
-npm run reset-project
-```
+## 🏫 Contexto Acadêmico
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Este projeto foi desenvolvido como trabalho final para a disciplina de **Desenvolvimento para Dispositivos Móveis** da **Universidade Federal de Juiz de Fora (UFJF)**. 
 
-## Learn more
+### 🎓 Objetivos do Trabalho
+- Aplicar conceitos de desenvolvimento mobile com React Native
+- Implementar funcionalidades de câmera e scanner de QR Code
+- Gerenciar estado e persistência de dados local
+- Criar uma interface responsiva e intuitiva
+- Demonstrar arquitetura limpa com custom hooks e componentes reutilizáveis
 
-To learn more about developing your project with Expo, look at the following resources:
+## 👨‍💻 Desenvolvedor
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+**Matheus Ribeiro Marques**  
+Estudante de Ciência da Computação - UFJF
 
-## Join the community
+## 📄 Licença
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Este projeto foi desenvolvido para fins acadêmicos como parte do curso de Ciência da Computação da UFJF.
