@@ -2,10 +2,18 @@ import EmptyState from "@/components/EmptyState";
 import FaltaCard from "@/components/FaltaCard";
 import Loading from "@/components/Loading";
 import { useFaltas } from "@/hooks/useFaltas";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
 export default function Faltas() {
   const { faltasPorDisciplina, loading, recalcularFaltas } = useFaltas();
+
+  useFocusEffect(
+    useCallback(() => {
+      recalcularFaltas();
+    }, [recalcularFaltas])
+  );
 
   if (loading) {
     return <Loading message="Calculando faltas..." />;

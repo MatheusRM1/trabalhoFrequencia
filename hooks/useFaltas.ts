@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export function useFaltas() {
   const [faltasPorDisciplina, setFaltasPorDisciplina] = useState<{disciplina: string, faltas: number, presencas: number, totalAulas: number}[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const calcularFaltas = async () => {
+  const calcularFaltas = useCallback(async () => {
     try {
       setLoading(true);
       
@@ -66,11 +66,11 @@ export function useFaltas() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     calcularFaltas();
-  }, []);
+  }, [calcularFaltas]);
 
   return {
     faltasPorDisciplina,

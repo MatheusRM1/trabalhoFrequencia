@@ -1,13 +1,13 @@
 import { AlunoPresente, RegistroPresenca } from '@/types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export function useAlunosPresentes() {
   const [alunosPresentes, setAlunosPresentes] = useState<AlunoPresente[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAlunosPresentes = async () => {
+  const fetchAlunosPresentes = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -27,7 +27,7 @@ export function useAlunosPresentes() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const registrarPresenca = async (matricula: string, nome: string, disciplina: string): Promise<RegistroPresenca> => {
     try {
@@ -71,7 +71,7 @@ export function useAlunosPresentes() {
 
   useEffect(() => {
     fetchAlunosPresentes();
-  }, []);
+  }, [fetchAlunosPresentes]);
 
   return {
     alunosPresentes,

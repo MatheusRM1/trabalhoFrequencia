@@ -2,10 +2,18 @@ import EmptyState from "@/components/EmptyState";
 import Loading from "@/components/Loading";
 import PresencaCard from "@/components/PresencaCard";
 import { useAlunosPresentes } from "@/hooks/useAlunosPresentes";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
 export default function AlunosPresentes() {
   const { alunosPresentes, loading, error, refetch } = useAlunosPresentes();
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch])
+  );
 
   if (loading) {
     return <Loading message="Carregando presenças..." />;
